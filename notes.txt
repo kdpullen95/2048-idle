@@ -1,0 +1,37 @@
+/*
+size: 3 x 3
+0 1 2 
+3 4 5 
+6 7 8 
+1d: i++ iterates through whole thing VS 2d: m++, i++ 
+1d: up (-size), down (+size), left (-1), right(1)
+2d: up (-1m), down (+1m), left(-1n), right(+1n) (effectively you need 2 separate functions) (if you want to move diagonally this might be even more complex)
+-
+size 3 x 3 x 3
+
+1 2 3
+4 5 6
+7 8 9
+
+0 1 2
+3 4 5
+6 7 8
+
+9 0 1 
+2 3 4
+5 6 7
+
+4 directions to 6 directions; the first four are the same except bounding blocks are no longer the entire array
+instead, bounds for up/down are size * size * slice, size * size * (slice + 1)
+
+new directions are -> forward/backward, at + size * size, - size * size
+
+-
+
+size 3 x 3 x 3 x 3
+
+6 directions to 8 directions; the first six are the same except forward/backward are bounded by size * size * slice * cel, size * size * slice * (cel + 1)
+
+new directions are -> ana ( size * size * size ) and kata (- size * size * size)
+
+*/

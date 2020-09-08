@@ -1,0 +1,63 @@
+.flex-container {
+    display: flex;
+    width: 100%;
+    align-items: flex-start;
+}
+
+.board {
+    display: grid;
+    justify-content: start;
+    align-content: start;
+}
+
+.cell {
+    border: 2px solid grey;
+    font-size: 2em;
+    font-weight: bold;
+    text-align: center;
+    overflow: hidden;
+    background-color: gainsboro;
+}
+
+.bordered {
+    border: 2px solid black;
+}
+
+.box {
+    padding: 10px;
+}
+
+.top-bar {
+    width: 95%;
+    height: 30px;
+    font-size: 1.5em;
+}
+
+.mod-box {
+    font-size: 1em;
+    border: 2px solid orchid;
+    width: 100px;
+    height: 100px;
+    background-color: rgb(255, 197, 253);
+}
+
+.mod-name {
+    margin: auto;
+    width: 75px;
+    text-align: center;
+    border-bottom: 1px solid orchid;
+}
+
+.mod-count {
+    font-size: 1em;
+    margin: auto;
+    width: 75px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.mod-buy {
+    margin: auto;
+    width: 75px;
+    text-align: center;
+}

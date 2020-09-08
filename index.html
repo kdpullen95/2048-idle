@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="Controller.js" type="module"></script>
+    <link rel="stylesheet" href="style.css">
+    <title>2048-Idle</title>
+</head>
+
+<body>
+    <div id="b">
+        <div class="top-bar box">| {{points}} points | {{tokens}} tokens |</div>
+        <div class="flex-container">
+            <div class="board box"
+                v-bind:style="computedGridStyle()">
+                <div v-for="tile in board" class="cell" v-bind:style="computedCellSize()">
+                    {{ tile.value }}
+                </div>
+            </div>
+            <div class="upgrades box">
+                <div v-for="mod in activeModifiers()" class="mod-box">
+                    <div class="mod-name">{{name(mod)}}</div> 
+                    <div class="mod-count">{{value(mod)}}</div>
+                    <div class="mod-buy"><button :disabled="!canAfford(mod)" @click="buy(mod)">Buy ({{cost(mod)}})</button></div>
+                </div>
+            </div>
+            <div class="log box">
+                <p v-for="line in log">
+                    {{ line }}
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
