@@ -19,16 +19,33 @@
                 </div>
             </div>
             <div class="upgrades box">
-                <div v-for="mod in activeModifiers()" class="mod-box">
-                    <div class="mod-name">{{name(mod)}}</div> 
-                    <div class="mod-count">{{value(mod)}}</div>
-                    <div class="mod-buy"><button :disabled="!canAfford(mod)" @click="buy(mod)">Buy ({{cost(mod)}})</button></div>
+                <div v-for="mod in modMan.activeAndSafeModifiers()" class="mod-box">
+                    <div class="mod-name">{{modMan.name(mod)}}</div> 
+                    <div class="mod-count">value: {{modMan.value(mod)}}</div>
+                    <div class="mod-buy"><button :disabled="!modMan.canAfford(mod)" @click="buy(mod)">Buy ({{modMan.cost(mod)}})</button></div>
+                </div>
+            </div>
+            <div class="unsafe-upgrades box">
+                <div v-for="mod in modMan.activeAndUnsafeModifiers()" class="mod-box">
+                    <div class="mod-name">{{modMan.name(mod)}}</div> 
+                    <div class="mod-count">value: {{modMan.value(mod)}}</div>
+                    <div class="mod-buy"><button :disabled="!modMan.canAfford(mod)" @click="buy(mod)">Buy ({{modMan.cost(mod)}})</button></div>
                 </div>
             </div>
             <div class="log box">
                 <p v-for="line in log">
                     {{ line }}
                 </p>
+            </div>
+            <div class="trophies box">
+                <div>Trophies</div>
+                <div v-for="trophy in troMan.sortedTrophies()" class="trophy-box" v-if="trophy.rank > 0">
+                    <div class="trophy-name">{{trophy.name}}</div>
+                    <div class="trophy-rank">rank: {{trophy.rank}}</div>
+                </div>
+            </div>
+            <div class="stats box">
+                Playtime: {{ staMan.getPlaytime() }}
             </div>
         </div>
     </div>

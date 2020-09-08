@@ -43,10 +43,17 @@ export class ModifierManager {
         } else {
             for (const [key, value] of Object.entries(modifiersBase)) {
                 modifiers[key] = deepMerge(defMod, value);
-                console.log(modifiers[key]);
             }
         }
         monMan = mM;
+    }
+
+    activeAndUnsafeModifiers() {
+        return Object.keys(modifiers).filter( key => modifiers[key].active && modifiers[key].isBoardAttr);
+    }
+
+    activeAndSafeModifiers() {
+        return Object.keys(modifiers).filter( key => modifiers[key].active && !modifiers[key].isBoardAttr);
     }
 
     activeModifiers() {

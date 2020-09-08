@@ -33,6 +33,40 @@
     font-size: 1.5em;
 }
 
+.unsafe-upgrades {
+    background-color: rgb(255, 148, 148);
+    border: 2px solid red;
+    padding: 10px;
+}
+
+.trophies {
+    background-color: rgb(255, 248, 146);
+    border: 2px solid rgb(255, 230, 0);
+    padding: 10px;
+}
+
+.trophy-box {
+    font-size: 1em;
+    border: 2px solid black;
+    width: 100px;
+    height: 100px;
+}
+
+.trophy-name {
+    margin: auto;
+    width: 75px;
+    text-align: center;
+    border-bottom: 1px solid black;
+}
+
+.trophy-rank {
+    font-size: 1em;
+    margin: auto;
+    width: 75px;
+    text-align: center;
+    font-weight: bold;
+}
+
 .mod-box {
     font-size: 1em;
     border: 2px solid orchid;

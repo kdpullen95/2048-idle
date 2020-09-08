@@ -36,6 +36,10 @@ export class LogManager {
         this.push('Restarting...');
     }
 
+    addUnlockedTrophyEvent(trophy) {
+        this.push(`Unlocked trophy ${trophy.name} rank ${trophy.rank}!`);
+    }
+
     addUpgradeEvent(modifier, value, cost, costType) {
         this.push(`Upgraded ${modifier} to ${value} for ${cost} ${costType}`);
     }
