@@ -1,8 +1,10 @@
 let trophies = {
-    bg: { name: "Big Gains", max: -1, rank: 0, trigger: function() { return monMan.getPoints() > 500 * Math.pow(2, trophies.bg.rank + 1) } },
+    hr: { name: "High Roller", max: -1, rank: 0, trigger: function() { return monMan.getPoints() > 50000 * Math.pow(2, trophies.hr.rank + 2) } },
+    bg: { name: "Big Gains", max: -1, rank: 0, trigger: function() { return staMan.getHighestPointGain() > 10 * Math.pow(2, trophies.bg.rank + 3 ) } },
     ts: { name: "Time Sink", max: -1, rank: 0, trigger: function() { return staMan.getPlaytime() > 3600000 * (trophies.ts.rank + 1) } },
-    tbinl: { name: "The Board is Now Larger", max: -1, rank: 0, trigger: function() { return modMan.value('size') > trophies.tbinl.rank + 3 && modMan.value('size') !== 4 } },
-    tbinns: { name: "The Board is Now Normal Size", max: 1, rank: 0, trigger: function() { return modMan.value('size') === 4 } }
+    tbinl: { name: "The Board is Large", max: -1, rank: 0, trigger: function() { return modMan.value('size') > trophies.tbinl.rank + 3 && modMan.value('size') !== 4 } },
+    tbinns: { name: "The Board is Medium", max: 1, rank: 0, trigger: function() { return modMan.value('size') === 4 } },
+    tbis: { name: "The Board is Small", max: 1, rank: 0, trigger: function() { return modMan.value('size') === 2 } },
 };
 
 let modMan, monMan, staMan, logMan;

@@ -1,7 +1,7 @@
 let log = [];
 
 function sizeCheck() {
-    if (log.length > 10) {
+    if (log.length > 15) {
         log.shift();
     }
 }
@@ -19,7 +19,8 @@ export class LogManager {
     }
 
     push(string) {
-        log.push(string);
+        const date = new Date();
+        log.push(`${date.getHours()}:${date.getMinutes()}:${date.getSeconds()} - ${string}`);
         sizeCheck();
     }
 

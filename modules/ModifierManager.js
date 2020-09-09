@@ -8,7 +8,7 @@ const defMod = {
 };
 
 const modifiersBase = {
-    pointsMult: { value: 1, bought: 1, cost: { base: 2 }, buy: { mult: 1.2 }, active: true, name: "Points Multiplier" },
+    pointsMult: { value: 1, bought: 1, cost: { base: 2 }, buy: { mult: 1.1 }, active: true, name: "Points Multiplier" },
     timeout: { value: 1000, bought: 1, cost: { base: 2 }, buy: { mult: 0.95 }, active: true, name: "Shift Speed" },
     reset: { value: 3000, bought: 1, cost: {  base: 2 }, buy: { mult: 0.95 }, name: "Reset Speed" },
     size: { value: 3, bought: 1, cost: { base: 40 }, buy: { add: 1 }, isBoardAttr: true, active: true, name: "Board Size"},

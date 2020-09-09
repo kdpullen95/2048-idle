@@ -9,43 +9,59 @@
 </head>
 
 <body>
-    <div id="b">
-        <div class="top-bar box">| {{points}} points | {{tokens}} tokens |</div>
-        <div class="flex-container">
-            <div class="board box"
-                v-bind:style="computedGridStyle()">
+    <div id="vue-activator">
+        <div id="top-bar" class="padded">| {{points}} points | {{tokens}} tokens |</div>
+        <div id="tab-bar" class="padded">
+            <button class="tab-button" v-on:click="selectedTab = 'boardPage'">Board & Upgrades</button>
+            <button class="tab-button" v-on:click="selectedTab = 'trophiesPage'">Trophies & Stats</button>
+        </div>
+
+        <div id="boardPage" class="page" v-if="selectedTab === 'boardPage'">
+            <div id="board" class="padded" v-bind:style="computedGridStyle()">
                 <div v-for="tile in board" class="cell" v-bind:style="computedCellSize()">
                     {{ tile.value }}
                 </div>
             </div>
-            <div class="upgrades box">
-                <div v-for="mod in modMan.activeAndSafeModifiers()" class="mod-box">
-                    <div class="mod-name">{{modMan.name(mod)}}</div> 
-                    <div class="mod-count">value: {{modMan.value(mod)}}</div>
-                    <div class="mod-buy"><button :disabled="!modMan.canAfford(mod)" @click="buy(mod)">Buy ({{modMan.cost(mod)}})</button></div>
-                </div>
-            </div>
-            <div class="unsafe-upgrades box">
-                <div v-for="mod in modMan.activeAndUnsafeModifiers()" class="mod-box">
-                    <div class="mod-name">{{modMan.name(mod)}}</div> 
-                    <div class="mod-count">value: {{modMan.value(mod)}}</div>
-                    <div class="mod-buy"><button :disabled="!modMan.canAfford(mod)" @click="buy(mod)">Buy ({{modMan.cost(mod)}})</button></div>
-                </div>
-            </div>
-            <div class="log box">
+            <div id="log" class="box">
                 <p v-for="line in log">
                     {{ line }}
                 </p>
             </div>
-            <div class="trophies box">
-                <div>Trophies</div>
-                <div v-for="trophy in troMan.sortedTrophies()" class="trophy-box" v-if="trophy.rank > 0">
-                    <div class="trophy-name">{{trophy.name}}</div>
-                    <div class="trophy-rank">rank: {{trophy.rank}}</div>
+            <div id="all-upgrades" class="bordered">
+                <div class="header">Upgrades</div>
+                <div class="upgrades padded flex">
+                    <div v-for="mod in modMan.activeAndSafeModifiers()" class="mod-box sub-box">
+                        <div class="text-box mod-name">{{modMan.name(mod)}}</div>
+                        <div class="text-box">value: <b>{{modMan.value(mod)}}</b></div>
+                        <div class="text-box"><button :disabled="!modMan.canAfford(mod)" @click="buy(mod)">Buy
+                                ({{modMan.cost(mod)}})</button></div>
+                    </div>
+                </div>
+                <div class="unsafe-upgrades padded flex">
+                    <div v-for="mod in modMan.activeAndUnsafeModifiers()" class="mod-box sub-box">
+                        <div class="text-box mod-name">{{modMan.name(mod)}}</div>
+                        <div class="text-box">value: <b>{{modMan.value(mod)}}</b></div>
+                        <div class="text-box"><button :disabled="!modMan.canAfford(mod)" @click="buy(mod)">Buy
+                                ({{modMan.cost(mod)}})</button></div>
+                    </div>
                 </div>
             </div>
-            <div class="stats box">
-                Playtime: {{ staMan.getPlaytime() }}
+        </div>
+
+        <div id="trophiesPage" class="page" v-if="selectedTab === 'trophiesPage'">
+            <div class="trophies box">
+                <div class="header">Trophies</div>
+                <div class="sub-header">Bonus: {{troMan.getTrophiesModifier()}}</div>
+                <div class="flex">
+                    <div v-for="trophy in troMan.sortedTrophies()" class="trophy-box sub-box" v-if="trophy.rank > 0">
+                        <div class="trophy-name text-box">{{trophy.name}}</div>
+                        <div class="text-box">rank: <b>{{trophy.rank}}</b></div>
+                    </div>
+                </div>
+            </div>
+            <div class="stats box bordered">
+                <div>Playtime: {{ staMan.getPlaytime() }}</div>
+                <div>Highest Unmodified Point Gain: {{ staMan.getHighestPointGain() }}</div>
             </div>
         </div>
     </div>

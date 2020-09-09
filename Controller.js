@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () =>  {
     console.log("~~DOM initialized.");
     //creates the Vue game window
     container = new Vue({
-        el: '#b',
+        el: '#vue-activator',
         data: {
           board: board.getBoard(),
           size: modMan.value('size'),
@@ -28,7 +28,8 @@ document.addEventListener("DOMContentLoaded", () =>  {
           cellSize: '60px',
           modMan: modMan,
           troMan: troMan,
-          staMan: staMan
+          staMan: staMan,
+          selectedTab: 'boardPage',
         },
         methods: {
             computedGridStyle() {
@@ -74,7 +75,8 @@ function iteration() {
         container.updateBoard();
         //continues the game loop
         setTimeout(iteration, modMan.value("timeout"));  
-    } 
+    }
+    staMan.updateHighestPointGain(p);
     staMan.stillRunning();
     troMan.runCheck();
 }

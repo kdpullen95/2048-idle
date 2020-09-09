@@ -1,6 +1,7 @@
 let stats = {
     time: 0,
     lastRunning: new Date().getTime(),
+    highestPointGain: 0,
 }
 
 export class StatManager {
@@ -14,6 +15,16 @@ export class StatManager {
 
     getPlaytime() {
         return stats.time;
+    }
+
+    updateHighestPointGain(points) {
+        if (points > stats.highestPointGain) {
+            stats.highestPointGain = points;
+        }
+    }
+
+    getHighestPointGain() {
+        return stats.highestPointGain;
     }
 
 }
