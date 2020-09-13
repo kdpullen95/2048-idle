@@ -10,7 +10,7 @@
 
 <body>
     <div id="vue-activator">
-        <div id="top-bar" class="padded">| {{points}} points | {{tokens}} tokens |</div>
+        <div id="top-bar" class="padded">| {{conMan.print(points)}} points | {{conMan.print(tokens)}} tokens |</div>
         <div id="tab-bar" class="padded">
             <button class="tab-button" v-on:click="selectedTab = 'boardPage'">Board & Upgrades</button>
             <button class="tab-button" v-on:click="selectedTab = 'trophiesPage'">Trophies & Stats</button>
@@ -19,7 +19,7 @@
         <div id="boardPage" class="page" v-if="selectedTab === 'boardPage'">
             <div id="board" class="padded" v-bind:style="computedGridStyle()">
                 <div v-for="tile in board" class="cell" v-bind:style="computedCellSize()">
-                    {{ tile.value }}
+                    {{ conMan.printTile(tile.value) }}
                 </div>
             </div>
             <div id="log" class="box">
@@ -32,17 +32,17 @@
                 <div class="upgrades padded flex">
                     <div v-for="mod in modMan.activeAndSafeModifiers()" class="mod-box sub-box">
                         <div class="text-box mod-name">{{modMan.name(mod)}}</div>
-                        <div class="text-box">value: <b>{{modMan.value(mod)}}</b></div>
+                        <div class="text-box">value: <b>{{conMan.print(modMan.value(mod))}}</b></div>
                         <div class="text-box"><button :disabled="!modMan.canAfford(mod)" @click="buy(mod)">Buy
-                                ({{modMan.cost(mod)}})</button></div>
+                                ({{conMan.print(modMan.cost(mod))}})</button></div>
                     </div>
                 </div>
                 <div class="unsafe-upgrades padded flex">
                     <div v-for="mod in modMan.activeAndUnsafeModifiers()" class="mod-box sub-box">
                         <div class="text-box mod-name">{{modMan.name(mod)}}</div>
-                        <div class="text-box">value: <b>{{modMan.value(mod)}}</b></div>
+                        <div class="text-box">value: <b>{{conMan.print(modMan.value(mod))}}</b></div>
                         <div class="text-box"><button :disabled="!modMan.canAfford(mod)" @click="buy(mod)">Buy
-                                ({{modMan.cost(mod)}})</button></div>
+                                ({{conMan.print(modMan.cost(mod))}})</button></div>
                     </div>
                 </div>
             </div>
@@ -51,17 +51,18 @@
         <div id="trophiesPage" class="page" v-if="selectedTab === 'trophiesPage'">
             <div class="trophies box">
                 <div class="header">Trophies</div>
-                <div class="sub-header">Bonus: {{troMan.getTrophiesModifier()}}</div>
+                <div class="sub-header">Bonus: {{conMan.print(troMan.getTrophiesModifier())}}</div>
                 <div class="flex">
                     <div v-for="trophy in troMan.sortedTrophies()" class="trophy-box sub-box" v-if="trophy.rank > 0">
                         <div class="trophy-name text-box">{{trophy.name}}</div>
-                        <div class="text-box">rank: <b>{{trophy.rank}}</b></div>
+                        <div class="text-box">rank: <b>{{conMan.print(trophy.rank)}}</b></div>
                     </div>
                 </div>
             </div>
             <div class="stats box bordered">
-                <div>Playtime: {{ staMan.getPlaytime() }}</div>
-                <div>Highest Unmodified Point Gain: {{ staMan.getHighestPointGain() }}</div>
+                <div>Playtime (Ms): {{ conMan.print(staMan.getPlaytime()) }}</div>
+                <div>Playtime (M): {{ conMan.print(staMan.getPlaytime()/36000) }}</div>
+                <div>Highest Unmodified Point Gain: {{ conMan.print(staMan.getHighestPointGain()) }}</div>
             </div>
         </div>
     </div>

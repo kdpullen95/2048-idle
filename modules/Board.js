@@ -8,17 +8,18 @@ function newTileValue() {
 }
 
 const dimensionDirections = {
-    1: ["left", "right"],
-    2: ["up", "down"],
-    3: ["forward", "backward"],
-    4: ["ana", "kata"]
+    1: ["right", "left"],
+    2: ["down", "up"],
+    3: ["backward", "forward"],
+    4: ["kata", "ana"]
 }
 
 let sizePower = {};
 let points = 0;
 let noMove = 0;
 let validDirections = [];
-let faceOpposite = {};
+let face = {};
+let faceInfo = {};
 let dimensions, array, modMan;
 
 function initConstants(size, start, dim) {
@@ -34,14 +35,22 @@ function initConstants(size, start, dim) {
 
     for (let i = dimensions; i > 0; i--) {
         dimensionDirections[i].forEach( (direction, index) => {
-            generateFaceOpposite(direction, i, !!index); //cast 0, 1 to bool
+            generateInfo(direction, i, !!index); //cast 0, 1 to bool
+            generateFace(direction, i, !!index); 
         });
     }
-
-    console.log(faceOpposite);
 }
 
-function generateFaceOpposite(direction, dimension, start) {
+function generateInfo(direction, dimension, start) {
+    faceInfo[direction] = { 
+        dimension: dimension, 
+        opposite: start ? dimensionDirections[dimension][0] : dimensionDirections[dimension][1], 
+        start: start,
+        baseSpawn: 1
+    };
+}
+
+function generateFace(direction, dimension, start) {
     let baseArr = [];
     // generate the "base" values (what the 'face' [an object of 1 dimension lower at the start/end of 
     // the higher-dimensional object] would be in the dimension that they reside in)
@@ -60,8 +69,8 @@ function generateFaceOpposite(direction, dimension, start) {
         }
         baseArr = fullArr.slice(); //construct the nth dimension face for the next dimensional iteration of slices
     }
-    //assign to faceOpposite[direction] (no need for reflection more than once)
-    faceOpposite[direction] = fullArr;
+    //assign to face[direction] (no need for reflection more than once)
+    face[direction] = fullArr;
 }
 
 function resetPoints() {
@@ -104,7 +113,7 @@ function shiftTile(pos, delta, min, max) {
 }
 
 function spawnTileDir(direction) {
-    return spawnTile(faceOpposite[direction], baseSpawn(direction) + modMan.value('spawnNumber'));
+    return spawnTile(face[faceInfo[direction].opposite], faceInfo[direction].baseSpawn + modMan.value('spawnNumber'));
 }
 
 
@@ -138,36 +147,20 @@ function resetTile(pos) {
     array[pos] = new Tile(0);
 }
 
-//todo rewrite to use repeated faces and iterate them
-const shiftFunc = {
-    up: () => {
-        for (let i = 0; i < sizePower[2]; i++) {
-            shiftTile(i, -1 * sizePower[1], 0, sizePower[2]);
-        }
-    },
-    down: () => {
-        for (let i = sizePower[2] - 1; i > -1; i--) {
-            shiftTile(i, sizePower[1], 0, sizePower[2]);
-        }
-    },
-    left: () => {
-        for (let i = 0; i < sizePower[1]; i++) {
-            for (let j = 0; j < sizePower[1]; j++) {
-                shiftTile(i * sizePower[1] + j, -1, i * sizePower[1], (i + 1) * sizePower[1]);
-            }
-        } 
-    },
-    right: () => {
-        for (let i = 1; i <= sizePower[1]; i++) {
-            for (let j = 1; j <= sizePower[1]; j++) {
-                shiftTile(i * sizePower[1] - j, 1, (i - 1) * sizePower[1], i * sizePower[1]);
-            }
-        }
-    }
-}
+function shiftLoop(direction) {
+    const faceDim = faceInfo[direction].dimension;
+    let sign = faceInfo[direction].start ? 1 : -1;
 
-function baseSpawn(direction) {
-    return 1; //todo should scale up with dimensions
+    for (let i = 0; i < sizePower[1]; i++) {
+        face[direction].forEach( (pos) => {
+            pos += (sizePower[faceDim - 1] * i * sign); //position is offset by a "column"/slice
+            const min = Math.floor(pos/sizePower[faceDim]) * sizePower[faceDim]; //box it in by nearest size^dimension box
+            const max = min + sizePower[faceDim];           //ex for dim 2, 0-64, 64-128, etc
+            //console.log(`min: ${min}, max: ${max}, shift: ${sign * -1 * sizePower[faceDim - 1]}, pos: ${pos}`);
+            shiftTile(pos, sign * -1 * sizePower[faceDim - 1], min, max);
+        });
+    }
+
 }
 
 export class Board {
@@ -193,7 +186,7 @@ export class Board {
 
     shift(direction) {
         resetPoints();
-        shiftFunc[direction]();
+        shiftLoop(direction);
         return { direction: direction, spawn: spawnTileDir(direction) };
     }
 

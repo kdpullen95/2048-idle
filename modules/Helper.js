@@ -9,3 +9,7 @@ export function randomValueSet(set) {
 export function trunc2(num) {
     return Math.trunc(num * 100)/100;
 }
+
+export function round2(num) {
+    return Math.round(num * 100)/100;
+}

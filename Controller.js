@@ -4,7 +4,9 @@ import { Board } from './modules/Board.js';
 import { LogManager } from './modules/LogManager.js';
 import { TrophyManager } from './modules/TrophyManager.js'; 
 import { StatManager } from './modules/StatManager.js';
+import { ConversionManager } from './modules/ConversionManager.js';
 
+const conMan = new ConversionManager();
 const logMan = new LogManager();
 const monMan = new MoneyManager(logMan);
 const modMan = new ModifierManager(monMan);
@@ -30,6 +32,7 @@ document.addEventListener("DOMContentLoaded", () =>  {
           modMan: modMan,
           troMan: troMan,
           staMan: staMan,
+          conMan: conMan,
           selectedTab: 'boardPage',
         },
         methods: {
@@ -64,12 +67,13 @@ document.addEventListener("DOMContentLoaded", () =>  {
 });
 
 function iteration() {
-    logMan.addShiftEvent(board.shiftRandom());
+    let shift = board.shiftRandom();
     let p = board.getPoints();
     if (p === -1) {
-        logMan.addShiftEvent(board.shiftUntilMove());
+        shift = board.shiftUntilMove();
         p = board.getPoints();
     }
+    logMan.addShiftEvent(shift);
     if (p === -1) {
         container.updateBoard();
         logMan.addGameOverEvent();
