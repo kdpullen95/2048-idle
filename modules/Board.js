@@ -1,5 +1,5 @@
 import { Tile } from './Tile.js';
-import { randomValue } from './Helper.js';
+import { randomValue, randomValueSet } from './Helper.js';
 
 let newTileValues;
 
@@ -19,7 +19,7 @@ let points = 0;
 let noMove = 0;
 let validDirections = [];
 let faceOpposite = {};
-let dimensions, array;
+let dimensions, array, modMan;
 
 function initConstants(size, start, dim) {
     dimensions = dim;
@@ -103,19 +103,26 @@ function shiftTile(pos, delta, min, max) {
     }
 }
 
+function spawnTileDir(direction) {
+    return spawnTile(faceOpposite[direction], baseSpawn(direction) + modMan.value('spawnNumber'));
+}
 
-function spawnTile(spawnArr) {
-    const spawn = [];
+
+function spawnTile(spawnArr, numberOf) {
+    const spawn = new Set(), addArr = [];
     spawnArr.forEach(entry => {
         if (array[entry].isEmpty()) {
-            spawn.push(entry);
+            spawn.add(entry);
         }
     });
-    if (spawn.length > 0) {
+    for (let i = 0; i < numberOf && spawn.size > 0; i++) {
         const value = newTileValue();
-        array[randomValue(spawn)] = new Tile(value);
-        return value;
+        const pos = randomValueSet(spawn);
+        array[pos] = new Tile(value);
+        addArr.push(value);
+        spawn.delete(pos);
     }
+    return addArr;
 }
 
 function updateTile(oldPos, newPos) {
@@ -127,10 +134,11 @@ function updateTile(oldPos, newPos) {
     resetTile(oldPos);
 }
 
-function resetTile(oldPos) {
-    array[oldPos] = new Tile(0);
+function resetTile(pos) {
+    array[pos] = new Tile(0);
 }
 
+//todo rewrite to use repeated faces and iterate them
 const shiftFunc = {
     up: () => {
         for (let i = 0; i < sizePower[2]; i++) {
@@ -158,12 +166,17 @@ const shiftFunc = {
     }
 }
 
+function baseSpawn(direction) {
+    return 1; //todo should scale up with dimensions
+}
+
 export class Board {
     
-    constructor(size, dim, start) {
+    constructor(size, dim, start, modMan_) {
         console.log(`Creating new board of size ${size}, dimension ${dim}, and start tile of ${start}`);
         this.size = size;
         initConstants(size, start, dim);
+        modMan = modMan_;
         this.resetBoard();
     }
 
@@ -181,13 +194,22 @@ export class Board {
     shift(direction) {
         resetPoints();
         shiftFunc[direction]();
-        //todo dynamic spawning based on dimension & modifiers
-        const s = spawnTile(faceOpposite[direction]);
-        return { direction: direction, spawn: [s] };
+        return { direction: direction, spawn: spawnTileDir(direction) };
     }
 
     shiftRandom() {
         return this.shift(randomValue(validDirections));
+    }
+
+    shiftUntilMove() {
+        for (let i = 0; i < validDirections.length; i++) {
+            const direction = validDirections[i];
+            this.shift(direction);
+            if (noMove !== sizePower[dimensions]) {
+                return  { direction: direction, spawn: spawnTileDir(direction) };
+            }
+        }
+        return { direction: 'nowhere', spawn: [] }
     }
 
     getPoints() {

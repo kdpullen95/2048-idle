@@ -11,8 +11,9 @@ const modMan = new ModifierManager(monMan);
 const staMan = new StatManager();
 const troMan = new TrophyManager(modMan, monMan, staMan, logMan);
 
-let board = new Board(modMan.value('size'), modMan.value('dimensions'), modMan.value('startTile')); 
+let board;
 let container;
+initBoard();
 
 document.addEventListener("DOMContentLoaded", () =>  {
     console.log("~~DOM initialized.");
@@ -45,7 +46,7 @@ document.addEventListener("DOMContentLoaded", () =>  {
                 this.board = board.getBoard();
             },
             fullReset: function() {
-                board = new Board(modMan.value('size'), modMan.value('dimensions'), modMan.value('startTile'));
+                initBoard();
                 this.size = modMan.value('size');
                 this.updateBoard();
             },
@@ -64,7 +65,11 @@ document.addEventListener("DOMContentLoaded", () =>  {
 
 function iteration() {
     logMan.addShiftEvent(board.shiftRandom());
-    const p = board.getPoints();
+    let p = board.getPoints();
+    if (p === -1) {
+        logMan.addShiftEvent(board.shiftUntilMove());
+        p = board.getPoints();
+    }
     if (p === -1) {
         container.updateBoard();
         logMan.addGameOverEvent();
@@ -86,4 +91,8 @@ function reset() {
     container.updateBoard();
     //continues the game loop
     setTimeout(iteration, modMan.value("timeout"));
+}
+
+function initBoard() {
+    board = new Board(modMan.value('size'), modMan.value('dimensions'), modMan.value('startTile'), modMan); 
 }
