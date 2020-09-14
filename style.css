@@ -62,10 +62,6 @@
     height: 30px;
 }
 
-.unsafe-upgrades {
-    background-color: rgb(255, 148, 148);
-    border: 2px solid red;
-}
 
 .trophies {
     background-color: rgb(255, 248, 146);
@@ -99,6 +95,10 @@
 
 .mod-name {
     border-bottom: 1px solid orchid;
+}
+
+.unsafe {
+    border: 2px dashed red;
 }
 
 .bold {

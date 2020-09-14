@@ -14,6 +14,7 @@
         <div id="tab-bar" class="padded">
             <button class="tab-button" v-on:click="selectedTab = 'boardPage'">Board & Upgrades</button>
             <button class="tab-button" v-on:click="selectedTab = 'trophiesPage'">Trophies & Stats</button>
+            <button class="tab-button" v-on:click="selectedTab = 'tacticsPage'">Tactics</button>
         </div>
 
         <div id="boardPage" class="page" v-if="selectedTab === 'boardPage'">
@@ -30,15 +31,7 @@
             <div id="all-upgrades" class="bordered">
                 <div class="header">Upgrades</div>
                 <div class="upgrades padded flex">
-                    <div v-for="mod in modMan.activeAndSafeModifiers()" class="mod-box sub-box">
-                        <div class="text-box mod-name">{{modMan.name(mod)}}</div>
-                        <div class="text-box">value: <b>{{conMan.print(modMan.value(mod))}}</b></div>
-                        <div class="text-box"><button :disabled="!modMan.canAfford(mod)" @click="buy(mod)">Buy
-                                ({{conMan.print(modMan.cost(mod))}})</button></div>
-                    </div>
-                </div>
-                <div class="unsafe-upgrades padded flex">
-                    <div v-for="mod in modMan.activeAndUnsafeModifiers()" class="mod-box sub-box">
+                    <div v-for="mod in modMan.activeModifiers()" class="mod-box sub-box" v-bind:class="{ unsafe: modMan.isBoardAttr(mod) }">
                         <div class="text-box mod-name">{{modMan.name(mod)}}</div>
                         <div class="text-box">value: <b>{{conMan.print(modMan.value(mod))}}</b></div>
                         <div class="text-box"><button :disabled="!modMan.canAfford(mod)" @click="buy(mod)">Buy
